@@ -34,7 +34,7 @@ type service struct {
 	client *Client
 }
 
-type ListOptions struct {
+type GetOptions struct {
 	Page    string `url:"page,omitempty"`
 	PerPage string `url:"per_page,omitempty"`
 }
@@ -99,22 +99,43 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 
 	response := newResponse(resp)
 
+	err = CheckResponse(resp)
+	if err != nil {
+		// even though there was an error, we still return the response
+		// in case the caller wants to inspect it further
+		return response, err
+	}
+
 	if v != nil {
 		if w, ok := v.(io.Writer); ok {
 			io.Copy(w, resp.Body)
 		} else {
 			err = json.NewDecoder(resp.Body).Decode(v)
 			if err == io.EOF {
-				err = nil
+				err = nil // ignore EOF errors caused by empty response body
 			}
 		}
 	}
 
-	return response, nil
+	return response, err
 }
 
 func newResponse(r *http.Response) *Response {
 	return &Response{Response: r}
+}
+
+func CheckResponse(r *http.Response) error {
+	if c := r.StatusCode; 200 <= c && c <= 299 {
+		return nil
+	}
+
+	var v error
+	data, err := ioutil.ReadAll(r.Body)
+	if err == nil && data != nil {
+		json.Unmarshal(data, v)
+	}
+
+	return v
 }
 
 // addOptions adds the parameters in opt as URL query parameters to s.  opt
@@ -137,6 +158,51 @@ func addOptions(s string, opt interface{}) (string, error) {
 
 	u.RawQuery = qs.Encode()
 	return u.String(), nil
+}
+
+// BasicAuthTransport is an http.RoundTripper that authenticates all requests
+// using HTTP Basic Authentication with the provided username and password.
+type BasicAuthTransport struct {
+	Username string
+	Password string
+
+	// Transport is the underlying HTTP transport to use when making requests.
+	// It will default to http.DefaultTransport if nil.
+	Transport http.RoundTripper
+}
+
+// RoundTrip implements the RoundTripper interface.
+func (t *BasicAuthTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	req = cloneRequest(req) // per RoundTrip contract
+	req.SetBasicAuth(t.Username, t.Password)
+	return t.transport().RoundTrip(req)
+}
+
+// Client returns an *http.Client that makes requests that are authenticated
+// using HTTP Basic Authentication.
+func (t *BasicAuthTransport) Client() *http.Client {
+	return &http.Client{Transport: t}
+}
+
+func (t *BasicAuthTransport) transport() http.RoundTripper {
+	if t.Transport != nil {
+		return t.Transport
+	}
+	return http.DefaultTransport
+}
+
+// cloneRequest returns a clone of the provided *http.Request. The clone is a
+// shallow copy of the struct and its Header map.
+func cloneRequest(r *http.Request) *http.Request {
+	// shallow copy of the struct
+	r2 := new(http.Request)
+	*r2 = *r
+	// deep copy of the Header
+	r2.Header = make(http.Header, len(r.Header))
+	for k, s := range r.Header {
+		r2.Header[k] = append([]string(nil), s...)
+	}
+	return r2
 }
 
 // Bool is a helper routine that allocates a new bool value
