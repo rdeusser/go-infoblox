@@ -40,7 +40,7 @@ func TestHostsService_Create_Host(t *testing.T) {
 
 		testMethod(t, r, "POST")
 		if !reflect.DeepEqual(v, input) {
-			t.Errorf("Request body = %+v, want %+v", v, input)
+			t.Errorf("Request body = %+v, expected %+v", v, input)
 		}
 
 		fmt.Fprint(w, `{"name":"host01"}`)

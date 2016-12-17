@@ -49,7 +49,7 @@ func TestStringify(t *testing.T) {
 	for i, tt := range tests {
 		s := Stringify(tt.in)
 		if s != tt.out {
-			t.Errorf("%d. Stringify(%q) => %q, want %q", i, tt.in, s, tt.out)
+			t.Errorf("%d. Stringify(%q) => %q, expected %q", i, tt.in, s, tt.out)
 		}
 	}
 }
