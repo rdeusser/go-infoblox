@@ -13,7 +13,8 @@ import (
 )
 
 const (
-	defaultBaseURL = "http://localhost/"
+	WAPIVersion    = "1.4"
+	defaultBaseURL = "https://localhost/"
 )
 
 type Client struct {
@@ -28,15 +29,11 @@ type Client struct {
 	common service
 
 	// Services used for talking to different parts of the Infoblox API.
+	Host *HostsService
 }
 
 type service struct {
 	client *Client
-}
-
-type GetOptions struct {
-	Page    string `url:"page,omitempty"`
-	PerPage string `url:"per_page,omitempty"`
 }
 
 func NewClient(httpClient *http.Client) *Client {
@@ -48,6 +45,7 @@ func NewClient(httpClient *http.Client) *Client {
 
 	c := &Client{client: httpClient, BaseURL: baseURL}
 	c.common.client = c
+	c.Host = (*HostsService)(&c.common)
 
 	return c
 }
