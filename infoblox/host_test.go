@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestHostsService_Get_Host(t *testing.T) {
+func TestHostService_Get_Host(t *testing.T) {
 	setup()
 	defer teardown()
 
@@ -28,7 +28,7 @@ func TestHostsService_Get_Host(t *testing.T) {
 	}
 }
 
-func TestHostsService_Create_Host(t *testing.T) {
+func TestHostService_Create_Host(t *testing.T) {
 	setup()
 	defer teardown()
 

@@ -2,7 +2,7 @@ package infoblox
 
 import "fmt"
 
-type HostsService service
+type HostService service
 
 type Host struct {
 	//IPV4Addrs              *[]IPV4Addr  `json:"ipv4addrs,omitempty"`
@@ -27,7 +27,7 @@ type Host struct {
 	AllowTelnet            *bool   `json:"allow_telnet,omitempty"`
 }
 
-func (s *HostsService) Get(name string) (*Host, *Response, error) {
+func (s *HostService) Get(name string) (*Host, *Response, error) {
 	u := fmt.Sprintf("/wapi/v%s/record:host?name=%s", WAPIVersion, name)
 
 	req, err := s.client.NewRequest("GET", u, nil)
@@ -44,7 +44,7 @@ func (s *HostsService) Get(name string) (*Host, *Response, error) {
 	return host, resp, err
 }
 
-func (s *HostsService) Create(host *Host) (*Host, *Response, error) {
+func (s *HostService) Create(host *Host) (*Host, *Response, error) {
 	u := fmt.Sprintf("/wapi/v%s/record:host", WAPIVersion)
 
 	req, err := s.client.NewRequest("POST", u, host)
