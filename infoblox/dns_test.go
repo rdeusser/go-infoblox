@@ -17,14 +17,14 @@ func TestHostService_Get_Host(t *testing.T) {
 		fmt.Fprint(w, `{"name":"host01"}`)
 	})
 
-	host, _, err := client.Host.Get("host01")
+	host, _, err := client.DNS.GetHost("host01")
 	if err != nil {
-		t.Errorf("Host.Get returned error: %v", err)
+		t.Errorf("DNS.GetHost returned error: %v", err)
 	}
 
 	expected := &Host{Name: String("host01")}
 	if !reflect.DeepEqual(host, expected) {
-		t.Errorf("Host.Get returned %#v, expected %#v", host, expected)
+		t.Errorf("DNS.GetHost returned %#v, expected %#v", host, expected)
 	}
 }
 
@@ -46,13 +46,13 @@ func TestHostService_Create_Host(t *testing.T) {
 		fmt.Fprint(w, `{"name":"host01"}`)
 	})
 
-	host, _, err := client.Host.Create(input)
+	host, _, err := client.DNS.CreateHost(input)
 	if err != nil {
-		t.Errorf("Host.Create returned error: %v", err)
+		t.Errorf("DNS.CreateHost returned error: %v", err)
 	}
 
 	expected := &Host{Name: String("host01")}
 	if !reflect.DeepEqual(host, expected) {
-		t.Errorf("Host.Create returned %+v, expected %+v", host, expected)
+		t.Errorf("DNS.CreateHost returned %+v, expected %+v", host, expected)
 	}
 }

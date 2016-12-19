@@ -29,7 +29,9 @@ type Client struct {
 	common service
 
 	// Services used for talking to different parts of the Infoblox API.
-	Host *HostService
+	DNS  *DNSService
+	DHCP *DHCPService
+	Grid *GridService
 }
 
 type service struct {
@@ -45,7 +47,9 @@ func NewClient(httpClient *http.Client) *Client {
 
 	c := &Client{client: httpClient, BaseURL: baseURL}
 	c.common.client = c
-	c.Host = (*HostService)(&c.common)
+	c.DNS = (*DNSService)(&c.common)
+	c.DHCP = (*DHCPService)(&c.common)
+	c.Grid = (*GridService)(&c.common)
 
 	return c
 }
