@@ -15,6 +15,10 @@ type Host struct {
 	TTL             *int      `json:"ttl,omitempty"`
 }
 
+func (h Host) String() string {
+	return Stringify(h)
+}
+
 func (s *HostRecordService) Get(name string) (*Host, *Response, error) {
 	u := fmt.Sprintf("%s/record:host?name=%s", versionedURL, name)
 

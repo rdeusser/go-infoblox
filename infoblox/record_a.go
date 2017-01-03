@@ -16,6 +16,10 @@ type A struct {
 	Zone     *string `json:"zone,omitempty"`
 }
 
+func (a A) String() string {
+	return Stringify(a)
+}
+
 func (s *ARecordService) Get(name string) (*A, *Response, error) {
 	u := fmt.Sprintf("%s/record:a?name=%s", versionedURL, name)
 

@@ -1,6 +1,9 @@
 package infoblox
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestStringify(t *testing.T) {
 	var nilPointer *string
@@ -42,14 +45,34 @@ func TestStringify(t *testing.T) {
 			[]*string{String("a"), String("b")},
 			`["a" "b"]`,
 		},
-
-		// actual Infoblox structs
 	}
 
 	for i, tt := range tests {
 		s := Stringify(tt.in)
 		if s != tt.out {
 			t.Errorf("%d. Stringify(%q) => %q, expected %q", i, tt.in, s, tt.out)
+		}
+	}
+}
+
+// Directly test the String() methods on various Infoblox types.  We don't do an
+// exaustive test of all the various field types, since TestStringify() above
+// takes care of that.  Rather, we just make sure that Stringify() is being
+// used to build the strings, which we do by verifying that pointers are
+// stringified as their underlying value.
+func TestString(t *testing.T) {
+	var tests = []struct {
+		in  interface{}
+		out string
+	}{
+		{Host{Name: String("host01")}, `infoblox.Host{Name:"host01"}`},
+		{A{Name: String("arecord01")}, `infoblox.A{Name:"arecord01"}`},
+	}
+
+	for i, tt := range tests {
+		s := tt.in.(fmt.Stringer).String()
+		if s != tt.out {
+			t.Errorf("%d. String() => %q, want %q", i, tt.in, tt.out)
 		}
 	}
 }
