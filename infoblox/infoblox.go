@@ -3,6 +3,7 @@ package infoblox
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -13,9 +14,11 @@ import (
 )
 
 const (
-	WAPIVersion    = "1.4"
+	WAPIVersion    = "1.7.1"
 	defaultBaseURL = "https://localhost/"
 )
+
+var versionedURL = fmt.Sprintf("/wapi/v%s", WAPIVersion)
 
 type Client struct {
 	// HTTP client used to communicate with the API.
@@ -29,9 +32,8 @@ type Client struct {
 	common service
 
 	// Services used for talking to different parts of the Infoblox API.
-	DNS  *DNSService
-	DHCP *DHCPService
-	Grid *GridService
+	Host *HostRecordService
+	A    *ARecordService
 }
 
 type service struct {
@@ -47,9 +49,8 @@ func NewClient(httpClient *http.Client) *Client {
 
 	c := &Client{client: httpClient, BaseURL: baseURL}
 	c.common.client = c
-	c.DNS = (*DNSService)(&c.common)
-	c.DHCP = (*DHCPService)(&c.common)
-	c.Grid = (*GridService)(&c.common)
+	c.Host = (*HostRecordService)(&c.common)
+	c.A = (*ARecordService)(&c.common)
 
 	return c
 }
