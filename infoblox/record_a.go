@@ -54,10 +54,10 @@ func (s *ARecordService) Create(a *A) (*A, *Response, error) {
 	return h, resp, err
 }
 
-func (s *ARecordService) Delete(record string) (*Response, error) {
-	u := fmt.Sprintf("%s/record:a", versionedURL)
+func (s *ARecordService) Delete(name string) (*Response, error) {
+	u := fmt.Sprintf("%s/record:a?name=%s", versionedURL, name)
 
-	req, err := s.client.NewRequest("DELETE", u, record)
+	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {
 		return nil, err
 	}
