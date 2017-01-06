@@ -53,3 +53,14 @@ func (s *ARecordService) Create(a *A) (*A, *Response, error) {
 
 	return h, resp, err
 }
+
+func (s *ARecordService) Delete(record string) (*Response, error) {
+	u := fmt.Sprintf("%s/record:a", versionedURL)
+
+	req, err := s.client.NewRequest("DELETE", u, record)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.Do(req, nil)
+}
