@@ -19,12 +19,12 @@ func TestHostRecordService_Get(t *testing.T) {
 
 	host, _, err := client.Host.Get("host01")
 	if err != nil {
-		t.Errorf("DNS.Get returned error: %v", err)
+		t.Errorf("Host.Get returned error: %v", err)
 	}
 
 	expected := &Host{Name: String("host01")}
 	if !reflect.DeepEqual(host, expected) {
-		t.Errorf("DNS.Get returned %#v, expected %#v", host, expected)
+		t.Errorf("Host.Get returned %#v, expected %#v", host, expected)
 	}
 }
 
@@ -48,12 +48,12 @@ func TestHostRecordService_Create(t *testing.T) {
 
 	host, _, err := client.Host.Create(input)
 	if err != nil {
-		t.Errorf("DNS.Create returned error: %v", err)
+		t.Errorf("Host.Create returned error: %v", err)
 	}
 
 	expected := &Host{Name: String("host01")}
 	if !reflect.DeepEqual(host, expected) {
-		t.Errorf("DNS.Create returned %+v, expected %+v", host, expected)
+		t.Errorf("Host.Create returned %+v, expected %+v", host, expected)
 	}
 }
 
