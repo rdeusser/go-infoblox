@@ -56,3 +56,17 @@ func TestHostRecordService_Create(t *testing.T) {
 		t.Errorf("DNS.Create returned %+v, expected %+v", host, expected)
 	}
 }
+
+func TestHostRecordService_Delete(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc(fmt.Sprintf("%s/record:host", versionedURL), func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, "DELETE")
+	})
+
+	_, err := client.Host.Delete("host01")
+	if err != nil {
+		t.Errorf("Host.Delete returned %v", err)
+	}
+}

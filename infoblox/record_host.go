@@ -52,3 +52,14 @@ func (s *HostRecordService) Create(host *Host) (*Host, *Response, error) {
 
 	return h, resp, err
 }
+
+func (s *HostRecordService) Delete(name string) (*Response, error) {
+	u := fmt.Sprintf("%s/record:host?name=%s", versionedURL, name)
+
+	req, err := s.client.NewRequest("DELETE", u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.Do(req, nil)
+}
