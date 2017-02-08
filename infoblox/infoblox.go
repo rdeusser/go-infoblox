@@ -34,6 +34,7 @@ type Client struct {
 	// Services used for talking to different parts of the Infoblox API.
 	Host *HostRecordService
 	A    *ARecordService
+	PTR  *PTRRecordService
 }
 
 type service struct {
@@ -51,6 +52,7 @@ func NewClient(httpClient *http.Client) *Client {
 	c.common.client = c
 	c.Host = (*HostRecordService)(&c.common)
 	c.A = (*ARecordService)(&c.common)
+	c.PTR = (*PTRRecordService)(&c.common)
 
 	return c
 }
