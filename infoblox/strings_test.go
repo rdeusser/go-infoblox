@@ -67,6 +67,7 @@ func TestString(t *testing.T) {
 	}{
 		{Host{Name: String("host01")}, `infoblox.Host{Name:"host01"}`},
 		{A{Name: String("arecord01")}, `infoblox.A{Name:"arecord01"}`},
+		{PTR{Name: String("ptrrecord01")}, `infoblox.PTR{Name:"ptrrecord01"}`},
 	}
 
 	for i, tt := range tests {
