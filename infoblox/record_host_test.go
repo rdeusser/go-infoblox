@@ -12,7 +12,7 @@ func TestHostRecordService_Get(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc(fmt.Sprintf("/wapi/v%s/record:host", WAPIVersion), func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(fmt.Sprintf("%s/record:host", versionedURL), func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
 		fmt.Fprint(w, `{"name":"host01"}`)
 	})
@@ -34,7 +34,7 @@ func TestHostRecordService_Create(t *testing.T) {
 
 	input := &Host{Name: String("host01")}
 
-	mux.HandleFunc(fmt.Sprintf("/wapi/v%s/record:host", WAPIVersion), func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(fmt.Sprintf("%s/record:host", versionedURL), func(w http.ResponseWriter, r *http.Request) {
 		v := new(Host)
 		json.NewDecoder(r.Body).Decode(v)
 
